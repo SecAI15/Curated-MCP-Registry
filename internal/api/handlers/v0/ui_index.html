@@ -144,6 +144,12 @@
         let nextCursor = null;
         let searchTimeout = null;
         let baseUrl = '';
+        const SERVER_WHITELIST = [
+            "context7",
+            "io.github.github/github-mcp-server",
+            "atlassian-mcp-server",
+            "microsoft-learn-mcp"
+        ];
 
         // Get base URL based on selection
         function getBaseUrl() {
@@ -263,7 +269,10 @@
                 const data = await response.json();
 
                 if (data.servers && data.servers.length > 0) {
-                    renderRecentServers(data.servers);
+                    const filteredRecent = data.servers.filter(item =>
+                        SERVER_WHITELIST.includes(item.server.name)
+                                                              );
+                    renderRecentServers(filteredRecent);
                     document.getElementById('recently-updated').classList.remove('hidden');
                 }
             } catch (err) {
@@ -316,8 +325,13 @@
 
                 const response = await fetch(url);
                 const data = await response.json();
+                
 
-                servers = data.servers || [];
+                
+                const allServers = data.servers || [];
+                servers = allServers.filter(item =>
+                    SERVER_WHITELIST.includes(item.server.name)
+                                           );
                 nextCursor = data.metadata?.nextCursor || null;
 
                 renderServers();
