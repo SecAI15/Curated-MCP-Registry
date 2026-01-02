@@ -270,8 +270,8 @@
 
                 if (data.servers && data.servers.length > 0) {
                     const filteredRecent = data.servers.filter(item =>
-                        SERVER_WHITELIST.includes(item.server.name)
-                                                              );
+    SERVER_WHITELIST.some(name => name.toLowerCase() === item.server.name.toLowerCase())
+);
                     renderRecentServers(filteredRecent);
                     document.getElementById('recently-updated').classList.remove('hidden');
                 }
@@ -330,8 +330,8 @@
                 
                 const allServers = data.servers || [];
                 servers = allServers.filter(item =>
-                    SERVER_WHITELIST.includes(item.server.name)
-                                           );
+    SERVER_WHITELIST.some(name => name.toLowerCase() === item.server.name.toLowerCase())
+);
                 nextCursor = data.metadata?.nextCursor || null;
 
                 renderServers();
